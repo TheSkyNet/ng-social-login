@@ -1,73 +1,83 @@
-import { BaseLoginProvider } from '../entities/base-login-provider';
-import { SocialUser, LoginProviderClass } from '../entities/user';
+import {BaseLoginProvider} from '../entities/base-login-provider';
+import {LoginProviderClass, SocialUser} from '../entities/user';
 
-declare let FB: any;
+declare let SC: any;
 
-export class FacebookLoginProvider extends BaseLoginProvider {
+export class SoundCloudLoginProvider extends BaseLoginProvider {
 
-  public static readonly PROVIDER_ID = 'facebook';
-  public loginProviderObj: LoginProviderClass = new LoginProviderClass();
+    public static readonly PROVIDER_ID = 'soundcloud';
+    public loginProviderObj: LoginProviderClass = new LoginProviderClass();
 
-  constructor(private clientId: string) {
-    super();
-    this.loginProviderObj.id = clientId;
-    this.loginProviderObj.name = 'facebook';
-    this.loginProviderObj.url = 'https://connect.facebook.net/en_US/sdk.js';
-  }
+    constructor(private clientId: string) {
+        super();
+        this.loginProviderObj.id = clientId;
+        this.loginProviderObj.name = 'soundcloud';
+        this.loginProviderObj.url = 'https://connect.soundcloud.com/sdk/sdk-3.3.0.js';
+    }
 
-  initialize(): Promise<SocialUser> {
-    return new Promise((resolve, reject) => {
-      this.loadScript(this.loginProviderObj, () => {
-          FB.init({
-            appId: this.clientId,
-            autoLogAppEvents: true,
-            cookie: true,
-            xfbml: true,
-            version: 'v2.10'
-          });
-          FB.AppEvents.logPageView();
+    static drawUser(response: any): SocialUser {
+        let user: SocialUser = new SocialUser();
+        user.id = response.id;
+        user.name = response.name;
+        user.email = response.email;
+        user.token = response.token;
+        user.image = `https://i1.sndcdn.com/avatars-${response.id}-${response.name}-t200x200.jpg`;
+        return user;
+    }
 
-          FB.getLoginStatus(function (response: any) {
-            if (response.status === 'connected') {
-              const accessToken = FB.getAuthResponse()['accessToken'];
-              FB.api('/me?fields=name,email,picture', (res: any) => {
-                resolve(FacebookLoginProvider.drawUser(Object.assign({}, {token: accessToken}, res)));
-              });
-            }
-          });
+    initialize(): Promise<SocialUser> {
+        return new Promise((resolve, reject) => {
+            this.loadScript(this.loginProviderObj, () => {
+                SC.init({
+                    appId: this.clientId,
+                    autoLogAppEvents: true,
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v2.10'
+                });
+                SC.AppEvents.logPageView();
+
+                SC.getLoginStatus(function (response: any) {
+                    if (response.status === 'connected') {
+                        const accessToken = SC.getAuthResponse()['accessToken'];
+                        SC.api('/me?fields=name,email,picture', (res: any) => {
+                            resolve(SoundCloudLoginProvider.drawUser(
+                                Object.assign({}, {
+                                        token: accessToken
+                                    }, res
+                                )
+                                )
+                            );
+                        });
+                    }
+                });
+            });
         });
-    });
-  }
+    }
 
-  static drawUser(response: any): SocialUser {
-    let user: SocialUser = new SocialUser();
-    user.id = response.id;
-    user.name = response.name;
-    user.email = response.email;
-    user.token = response.token;
-    user.image = 'https://graph.facebook.com/' + response.id + '/picture?type=normal';
-    return user;
-  }
+    signIn(): Promise<SocialUser> {
+        return new Promise((resolve, reject) => {
+            SC.login((response: any) => {
+                if (response.authResponse) {
+                    const accessToken = SC.getAuthResponse()['accessToken'];
+                    SC.api('/me?fields=name,email,picture', (res: any) => {
+                        resolve(SoundCloudLoginProvider.drawUser(Object.assign({}, {
+                                token: accessToken
+                            }, res)
+                            )
+                        );
+                    });
+                }
+            }, {scope: 'email,public_profile'});
+        });
+    }
 
-  signIn(): Promise<SocialUser> {
-    return new Promise((resolve, reject) => {
-      FB.login((response: any) => {
-        if (response.authResponse) {
-          const accessToken = FB.getAuthResponse()['accessToken'];
-          FB.api('/me?fields=name,email,picture', (res: any) => {
-            resolve(FacebookLoginProvider.drawUser(Object.assign({}, {token: accessToken}, res)));
-          });
-        }
-      }, { scope: 'email,public_profile' });
-    });
-  }
-
-  signOut(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      FB.logout((response: any) => {
-        resolve();
-      });
-    });
-  }
+    signOut(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            SC.logout((response: any) => {
+                resolve();
+            });
+        });
+    }
 
 }

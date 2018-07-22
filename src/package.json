@@ -1,14 +1,14 @@
 {
-  "name": "angular5-social-login",
+  "name": "ng-social-login",
   "version": "1.0.9",
-  "description": "Agular 5 : Social Login (Facebook and Google)",
+  "description": "Agular 5 : Social Login (Facebook, Google , likedin, twitter, reddit, soundclowd )",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sabyasachibiswal/angular5-social-login"
+    "url": "https://github.com/TheSkyNet/ng-social-login"
   },
   "author": {
-    "name": "Sabyasachi Biswal",
-    "email": "sabyasachi.biswal4@gmail.com"
+    "name": "Kevin Morton",
+    "email": "kev@kevs.biz"
   },
   "keywords": [
     "angular",
@@ -22,23 +22,24 @@
     "social authentication",
     "angular social authentication",
     "angular-social-login",
-    "angular5-social-login",
+    "ng-social-login",
     "social-authentication",
     "social-login",
     "google-authentication",
     "angular-google-authentication",
     "facebook-authentication",
     "angular-facebook-authentication",
-    "angular module"
+    "angular module",
+    "sound cloud authentication"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sabyasachibiswal/angular5-social-login/issues"
+    "url": "https://github.com/TheSkyNet/ng-social-login/issues"
   },
-  "main": "angular5-social-login.umd.js",
-  "module": "angular5-social-login.js",
-  "jsnext:main": "angular5-social-login.js",
-  "typings": "angular5-social-login.d.ts",
+  "main": "ng-social-login.umd.js",
+  "module": "ng-social-login.js",
+  "jsnext:main": "ng-social-login.js",
+  "typings": "ng-social-login.d.ts",
   "peerDependencies": {
     "@angular/common": "^5.0.0",
     "@angular/core": "^5.0.0",

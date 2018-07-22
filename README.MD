@@ -9,7 +9,7 @@ Social login api for Angular 5. Includes Facebook and Google login.
 ### Install via npm 
 
 ```sh
-npm install --save angular5-social-login
+npm install --save ng-social-login
 ```
 
 ### Import the module
@@ -24,7 +24,7 @@ import {
     AuthServiceConfig,
     GoogleLoginProvider,
     FacebookLoginProvider,
-} from "angular5-social-login";
+} from "ng-social-login";
 
 
 // Configs 
@@ -73,7 +73,7 @@ import {
     AuthService,
     FacebookLoginProvider,
     GoogleLoginProvider
-} from 'angular5-social-login';
+} from 'ng-social-login';
 
 @Component({
   selector: 'app-signin',
